@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot:title>Face register</x-slot:title>
     <div class="page-wrapper">
-        <x-page-header title="Face register" />
+        <x-page-header title="Ajukan absen" />
         <x-page-body>
             <form action="" method="post" class="card">
                 <div class="card-body">

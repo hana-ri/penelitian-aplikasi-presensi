@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClassroomController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MoodleLoginController;
 use App\Http\Controllers\FaceRecognitionController;
@@ -66,13 +67,13 @@ Route::middleware(['auth:moodle'])->group(function () {
 
 // Protected routes for Admin
 Route::middleware(['auth:moodle'])->group(function () {
-    Route::get('/admin/class', function () {
-        return view('admin.class');
-    })->name('admin.class.index');
+    // Route::get('/admin/class', function () {
+    //     return view('admin.class');
+    // })->name('admin.class.index');
 
-    Route::get('/admin/class/create', function () {
-        return view('admin.create');
-    })->name('admin.class.create');
+    // Route::get('/admin/class/create', function () {
+    //     return view('admin.create');
+    // })->name('admin.class.create');
 
     Route::get('/admin/class/edit', function () {
         return view('admin.edit');
@@ -88,3 +89,15 @@ Route::middleware(['auth:moodle'])->group(function () {
 });
 
 Route::post('/recognize', [FaceRecognitionController::class, 'recognize']);
+
+
+Route::prefix('admin')
+->name('admin.')
+->group(function () {
+    Route::middleware(['auth:moodle'])->group(function () {
+        Route::controller(ClassroomController::class)->group(function() {
+            Route::get('class', 'index')->name('class.index');
+            Route::get('class/create', 'create')->name('class.create');
+        });
+    });
+});
