@@ -8,29 +8,25 @@
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Nama</label>
                         <div class="col">
-                            <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="Jhon doe">
+                            <input type="text" class="form-control" placeholder="Jhon doe">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">NIM</label>
                         <div class="col">
-                            <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="20012345">
+                            <input type="text" class="form-control" placeholder="20012345">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Fakultas/Kampus daerah</label>
                         <div class="col">
-                            <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="Kampus Daerah Cibiru">
+                            <input type="text" class="form-control" placeholder="Kampus Daerah Cibiru">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Program studi</label>
                         <div class="col">
-                            <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="Teknik Komputer">
+                            <input type="text" class="form-control" placeholder="Teknik Komputer">
                         </div>
                     </div>
                     <div class="mb-3 row">

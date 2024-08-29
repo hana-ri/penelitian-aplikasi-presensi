@@ -8,8 +8,8 @@
                         <i class="ti ti-plus fs-3"></i>
                         Buat kelas
                     </a>
-                    <a href="{{ route('admin.class.create') }}" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target=""
-                        aria-label="Create New Post">
+                    <a href="{{ route('admin.class.create') }}" class="btn btn-primary d-sm-none btn-icon"
+                        data-bs-toggle="modal" data-bs-target="" aria-label="Create New Post">
                         <i class="ti ti-plus fs-3"></i>
                     </a>
                 </div>
@@ -17,25 +17,70 @@
         </x-page-header>
         <x-page-body>
             <div class="row">
-                @for ($i = 1; $i <= 3; $i++)
+                @if (session('success'))
+                    <div class="col-12 mb-3">
+                        <div class="alert alert-success alert-dismissible bg-white" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <i class="ti ti-check fs-2"></i>
+                                </div>
+                                <div>
+                                    {{ session('success') }}
+                                </div>
+                            </div>
+                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                        </div>
+                    </div>
+                @endif
+
+                @foreach ($classrooms as $classroom)
                     <div class="col-12 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h3 class="card-title">Mata kuliah #{{ $i }}</h3>
-                                <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Aperiam
-                                    deleniti fugit incidunt, iste, itaque minima
-                                    neque pariatur perferendis sed suscipit velit vitae voluptatem.</p>
+                                <h3 class="card-title">#{{ $classroom->code }} - Mata Kuliah {{ $classroom->name }}</h3>
+                                <p class="text-secondary">{{ $classroom->description }}</p>
+                                <p class="text-secondary"><a href="{{ route('admin.class.enrollment', $classroom->code) }}"> {{ route('admin.class.enrollment', $classroom->code) }}</a></p>
                             </div>
-                            <!-- Card footer -->
-                            <div class="card-footer">
-                                <a href="{{ route('admin.class.edit') }}" class="btn btn-yellow">Ubah</a>
-                                <a href="{{ route('admin.class.list') }}" class="btn btn-primary">Lihat pertemuan</a>
+                            <div class="card-footer text-end">
+                                <div class="d-flex">
+                                    <label class="row">
+                                        <span class="col">Mode pendaftaran</span>
+                                        <span class="col-auto">
+                                            <label class="form-check form-check-single form-switch">
+                                                <input class="form-check-input" type="checkbox" checked>
+                                            </label>
+                                        </span>
+                                    </label>
+                                    <div class="ms-auto">
+                                        <a href="{{ route('admin.attendance.list', $classroom->code) }}"
+                                            class="btn btn-primary me-3">Lihat pertemuan</a>
+                                        <a href="{{ route('admin.class.edit', $classroom->code) }}"
+                                            class="btn btn-yellow me-3">Ubah</a>
+                                        <form id="delete-form-{{ $classroom->code }}"
+                                            action="{{ route('admin.class.destroy', $classroom->code) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmDeletion('{{ $classroom->code }}')">Hapus</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
             </div>
         </x-page-body>
     </div>
+
+    @push('scripts')
+        <script>
+            function confirmDeletion(code) {
+                if (confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
+                    document.getElementById('delete-form-' + code).submit();
+                }
+            }
+        </script>
+    @endpush
 </x-app-layout>

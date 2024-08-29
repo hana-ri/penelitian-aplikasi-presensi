@@ -3,18 +3,24 @@
     <div class="page-wrapper">
         <x-page-header title="Daftar pertemuan" />
         <x-page-body>
-            @for ($i = 1; $i <= 3; $i++)
+            @foreach ($classroom->meetings as $meeting)
                 <div class="col-12 mb-3">
                     <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Pertemuan #{{ $loop->iteration }}</h3>
+
+                        </div>
                         <div class="card-body">
-                            <h3 class="card-title">Pertemuan #{{ $i }}</h3>
+                            <p>Tanggal: {{ $meeting->date }}</p>
+                            <p>Jam: {{ $meeting->start_time }} - {{ $meeting->end_time }}</p>
                         </div>
                         <div class="card-footer">
-                            <a href="{{ route('admin.class.show') }}" class="btn btn-primary">Hasil presensi</a>
+                            <a href="{{ route('admin.class.show') }}" class="btn btn-primary">Lihat</a>
+                            {{-- <a href="{{ route('admin.class.show') }}" class="btn btn-warning">Tutup pertemuan</a> --}}
                         </div>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </x-page-body>
     </div>
 </x-app-layout>

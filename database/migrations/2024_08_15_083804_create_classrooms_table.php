@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('classrooms', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', '255');
+            $table->bigInteger('id', true, false);
+            $table->string('code', 255)->unique();
+            $table->string('name', 255);
             $table->text('description')->nullable();
+            $table->date('start_date');
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_enrollmen')->default(false);

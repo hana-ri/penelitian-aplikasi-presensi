@@ -49,6 +49,11 @@ class MoodleUser extends Authenticatable
     {
         return $this->with(['roleAssignments', 'roles', 'contexts'])->get();
     }
+
+    public function classrooms()
+    {
+        return $this->belongsToMany(Classroom::class, 'user_classroom', 'user_id', 'classroom_id');
+    }
 }
 
 class RoleAssignment extends Model
