@@ -3,20 +3,33 @@
     <div class="page-wrapper">
         <x-page-header title="Daftar kelas" />
         <x-page-body>
-            @for ($i = 1; $i <= 3; $i++)
+            @if (session('success'))
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible bg-white" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <i class="ti ti-check fs-2"></i>
+                                </div>
+                                <div>
+                                    {{ session('success') }}
+                                </div>
+                            </div>
+                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                        </div>
+                    </div>
+                @endif
+            @foreach ($classrooms as $classroom)
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h3 class="card-title">Mata kuliah #{{ $i }}</h3>
-                        <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam
-                            deleniti fugit incidunt, iste, itaque minima
-                            neque pariatur perferendis sed suscipit velit vitae voluptatem.</p>
+                        <h3 class="card-title">#{{ $classroom->code }} - Mata Kuliah {{ $classroom->name }}</h3>
+                        <p class="text-secondary">Pengampu: {{ $classroom->ownUser->full_name }}</p>
+                        <p class="text-secondary">Deskripsi: {{ $classroom->description }}</p>
                     </div>
-                    <!-- Card footer -->
                     <div class="card-footer">
-                        <a href="{{ route('attendance.list') }}" class="btn btn-primary">Buka</a>
+                        <a href="{{ route('user.class.attendance.index', $classroom->code) }}" class="btn btn-primary">Buka</a>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </x-page-body>
     </div>
 </x-app-layout>

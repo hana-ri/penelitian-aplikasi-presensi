@@ -72,18 +72,18 @@
                             <span class="nav-link-title"> Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->route()->named('attendance.class') ? 'active' : '' }}">
-                        <a class="nav-link {{ request()->route()->named('attendance.class') ? 'active' : '' }}"
-                            href="{{ route('attendance.class') }}">
+                    <li class="nav-item {{ request()->route()->named('user.class.index') ? 'active' : '' }}">
+                        <a class="nav-link {{ request()->route()->named('user.class.index') ? 'active' : '' }}"
+                            href="{{ route('user.class.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-ad-2 fs-2"></i>
                             </span>
                             <span class="nav-link-title"> Presensi</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->route()->named('face.register') ? 'active' : '' }}">
-                        <a class="nav-link {{ request()->route()->named('face.register') ? 'active' : '' }}"
-                            href="{{ route('face.register') }}">
+                    <li class="nav-item {{ request()->route()->named('user.face.register') ? 'active' : '' }}">
+                        <a class="nav-link {{ request()->route()->named('user.face.register') ? 'active' : '' }}"
+                            href="{{ route('user.face.register') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-user fs-2"></i>
                             </span>

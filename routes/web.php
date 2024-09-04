@@ -45,14 +45,6 @@ Route::middleware(['auth:moodle'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/attendance/class', function () {
-        return view('attendance.class');
-    })->name('attendance.class');
-
-    Route::get('/attendance/list', function () {
-        return view('attendance.list');
-    })->name('attendance.list');
-
     Route::get('/attendance', function () {
         return view('attendance.face_recognition');
     })->name('attendance');
@@ -61,25 +53,29 @@ Route::middleware(['auth:moodle'])->group(function () {
         return view('attendance.absent');
     })->name('absent');
 
-    Route::get('/face/register', function () {
-        return view('attendance.face_register');
-    })->name('face.register');
+    // Route::get('/face/register', function () {
+    //     return view('attendance.face_register');
+    // })->name('face.register');
 });
 
-// Protected routes for Admin
-Route::middleware(['auth:moodle'])->group(function () {
+Route::prefix('user')
+->name('user.')
+->group(function () {
+    // Proteksi routes untuk Admin
+    Route::middleware(['auth:moodle'])->group(function () {
+        Route::controller(App\Http\Controllers\UserClassroomController::class)->group(function() {
+            Route::get('classroom', 'indexClassroom')->name('class.index');
+            Route::get('classroom/list/{classroom:code}', 'indexMeeting')->name('class.attendance.index');
+            Route::get('class/enrollment/{classroom:code}', 'enrollment')->name('class.enrollment');
+        });
 
-    // Route::get('/admin/attendance/list', function () {
-    //     return view('admin.list');
-    // })->name('admin.class.list');
-
-    Route::get('/admin/attendance/show', function () {
-        return view('admin.show');
-    })->name('admin.class.show');
+        Route::controller(FaceRecognitionController::class)->group(function () {
+            Route::get('face/register', 'indexFaceRegister')->name('face.register');
+            Route::post('face/register', 'createFaceRegister')->name('create.face.register');
+            Route::get('face/show', 'showFaceImage')->name('face.show');
+        });
+    });
 });
-
-Route::post('/recognize', [FaceRecognitionController::class, 'recognize']);
-
 
 Route::prefix('admin')
 ->name('admin.')
@@ -93,11 +89,14 @@ Route::prefix('admin')
             Route::get('class/edit/{classroom:code}', 'edit')->name('class.edit');
             Route::post('class/edit/{classroom:code}', 'update')->name('class.update');
             Route::delete('class/edit/{classroom:code}', 'delete')->name('class.destroy');
-            Route::get('class/enrollment/{classroom:code}', 'enrollment')->name('class.enrollment');
+            // Route::get('class/enrollment/{classroom:code}', 'enrollment')->name('class.enrollment');
         });
 
         Route::controller(MeetingController::class)->group(function () {
-            Route::get('attendance/list/{classroom:code}', 'index')->name('attendance.list');
+            Route::get('attendance/list/{classroom:code}', 'indexClassroom')->name('attendance.list');
+            Route::get('attendance/meeting/list/{meeting:id}', 'indexMeeting')->name('attendance.meeting.list');
         });
     });
 });
+
+Route::post('/recognize', [FaceRecognitionController::class, 'recognize']);

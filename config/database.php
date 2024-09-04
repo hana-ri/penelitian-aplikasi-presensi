@@ -103,7 +103,7 @@ return [
             'unix_socket' => env('MOODLE_DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => 'mdl_',
+            'prefix' => '',
             'strict' => true,
             'engine' => null,
         ],

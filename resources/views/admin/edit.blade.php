@@ -1,20 +1,7 @@
 <x-app-layout>
     <x-slot:title>Perbarui data kelas</x-slot:title>
     <div class="page-wrapper">
-        <x-page-header title="Perbarui data kelas">
-            <div class="d-flex">
-                <div class="btn-list">
-                    <a href="#" class="btn btn-primary d-none d-sm-inline-block">
-                        <i class="ti ti-plus fs-3"></i>
-                        Buat kelas
-                    </a>
-                    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target=""
-                        aria-label="Create New Post">
-                        <i class="ti ti-plus fs-3"></i>
-                    </a>
-                </div>
-            </div>
-        </x-page-header>
+        <x-page-header title="Perbarui data kelas #{{ $classroom->code }} - {{ $classroom->name }}" />
         <x-page-body>
             <div class="row">
                 <div class="col-12">
@@ -38,7 +25,7 @@
                                 <div class="col">
                                     <input type="text" name="code" class="form-control" placeholder="CM101"
                                         value="{{ old('code', $classroom->code ?? '') }}">
-                                    <small class="form-hint">Kode harus unique (belum pernah digunakan).</small>
+                                    <small class="form-hint">Kode harus unik.</small>
                                 </div>
                                 @error('code')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -48,7 +35,17 @@
                                 <label class="col-3 col-form-label required">Nama</label>
                                 <div class="col">
                                     <input type="text" name="name" class="form-control" placeholder="Kalkulus"
-                                    value="{{ old('name', $classroom->name ?? '') }}">
+                                        value="{{ old('name', $classroom->name ?? '') }}">
+                                    <small class="form-hint">Nama mata kuliah atau kelas</small>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-3 col-form-label required">Mode pendaftaran</label>
+                                <div class="col">
+                                    <select class="form-select" name="is_enrollment">
+                                        <option value="1" @selected(old('is_enrollment', $classroom->is_enrollment))>Aktif</option>
+                                        <option value="0" @selected(!old('is_enrollment', $classroom->is_enrollment))>Nonaktif</option>
+                                    </select>
                                     <small class="form-hint">Nama mata kuliah atau kelas</small>
                                 </div>
                             </div>

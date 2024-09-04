@@ -47,7 +47,7 @@
                             <div class="col">
                                 <input type="text" name="code" class="form-control" placeholder="CM101"
                                     value="{{ old('code') }}">
-                                <small class="form-hint">Kode harus unique (belum pernah digunakan).</small>
+                                <small class="form-hint">Kode harus unik (belum pernah digunakan).</small>
                             </div>
                             @error('code')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -58,6 +58,16 @@
                             <div class="col">
                                 <input type="text" name="name" class="form-control" placeholder="Kalkulus"
                                     value="{{ old('name') }}">
+                                <small class="form-hint">Nama mata kuliah atau kelas</small>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-3 col-form-label required">Mode pendaftaran</label>
+                            <div class="col">
+                                <select class="form-select" name="is_enrollment">
+                                    <option value="1" @selected(old('is_enrollment'))>Aktif</option>
+                                    <option value="0" @selected(!old('is_enrollment'))>Nonaktif</option>
+                                </select>
                                 <small class="form-hint">Nama mata kuliah atau kelas</small>
                             </div>
                         </div>

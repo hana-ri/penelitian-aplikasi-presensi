@@ -6,12 +6,14 @@ use App\Models\Classroom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ClassroomController extends Controller
+class   ClassroomController extends Controller
 {
     public function index()
     {
+        $userClassrooms = auth()->user()->ownClassrooms;
+
         return view('admin.class', [
-            'classrooms' => Classroom::all(),
+            'classrooms' => $userClassrooms,
         ]);
     }
 
@@ -28,7 +30,8 @@ class ClassroomController extends Controller
             'description' => 'required',
             'start_date' => 'required',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time'
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'is_enrollment' => 'required',
         ], [
             'required' => ':attribute harus diisi.',
             'unique' => ':attribute sudah terdaftar, silakan gunakan kode lain.',
@@ -42,7 +45,10 @@ class ClassroomController extends Controller
             'start_date' => 'waktu mulai',
             'start_time' => 'waktu mulai',
             'end_time' => 'waktu berakhir',
+            'is_enrollment' => 'Mode pendaftaran',
         ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
 
         try {
             DB::beginTransaction();
@@ -85,6 +91,7 @@ class ClassroomController extends Controller
             'code' => 'required|unique:classrooms,code,' . $classroom->id,
             'name' => 'required|max:255',
             'description' => 'required',
+            'is_enrollment' => 'required',
         ], [
             'required' => ':attribute harus diisi.',
             'unique' => ':attribute sudah terdaftar, silakan gunakan kode lain.',
@@ -93,6 +100,7 @@ class ClassroomController extends Controller
             'code' => 'kode',
             'name' => 'nama',
             'description' => 'deskripsi',
+            'is_enrollment' => 'Mode pendaftaran',
         ]);
 
         try {
@@ -110,25 +118,31 @@ class ClassroomController extends Controller
         }
     }
 
-    public function enrollment(Classroom $classroom)
-    {
+    // public function enrollment(Classroom $classroom)
+    // {
+    //     try {
+    //         DB::beginTransaction();
 
+    //         $user = auth()->user();
 
-        try {
-            DB::beginTransaction();
+    //         // Cek apakah user sudah terdaftar di kelas
+    //         if ($classroom->users->contains($user)) {
+    //             // Jika user sudah ada, gunakan sync
+    //             $classroom->users()->sync($user);
+    //         } else {
+    //             // Jika user belum ada, gunakan attach
+    //             $classroom->users()->attach($user);
+    //         }
 
-            $user = auth()->user();
-            $classroom->users()->sync($user);
-
-            DB::commit();
-            return redirect()->route('attendance.class')->with('success', 'Berhasil melakukan pendaftaran kelas.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat pendaftaran kelas. Silakan hubungi administrator.' . ' ' . $e->getMessage())
-                ->withInput();
-        }
-    }
+    //         DB::commit();
+    //         return redirect()->route('attendance.class')->with('success', 'Berhasil melakukan pendaftaran kelas.');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return redirect()->back()
+    //             ->with('error', 'Terjadi kesalahan saat pendaftaran kelas. Silakan hubungi administrator.' . ' ' . $e->getMessage())
+    //             ->withInput();
+    //     }
+    // }
 
     public function delete(Classroom $classroom)
     {

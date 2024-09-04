@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classrooms', function (Blueprint $table) {
-            $table->bigInteger('id', true, false);
+        Schema::create('attendance_information', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('user_id');
-            $table->string('code', 255)->unique();
-            $table->string('name', 255);
-            $table->text('description')->nullable();
-            $table->date('start_date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->boolean('is_enrollment')->default(false);
+            $table->string('name');
+            $table->string('nim')->unique();
+            $table->string('faculty');
+            $table->string('majoring');
+            $table->binary('registered_face');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('mdl_user')->onDelete('cascade');
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classrooms');
+        Schema::dropIfExists('attendance_information');
     }
 };

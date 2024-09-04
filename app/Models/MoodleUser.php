@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class MoodleUser extends Authenticatable
 {
     protected $connection = 'moodle';
-    protected $table = 'user';
+    protected $table = 'mdl_user';
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -21,6 +20,10 @@ class MoodleUser extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $with = [
+        'AttendanceInformation'
+    ];
+
     public function getFullNameAttribute()
     {
        return $this->firstname . ' ' . $this->lastname;
@@ -29,7 +32,7 @@ class MoodleUser extends Authenticatable
     // Relasi ke tabel role_assignments
     public function roleAssignments()
     {
-        return $this->hasMany(RoleAssignment::class, 'userid', 'id');
+        return $this->hasMany(RoleAssignment::class, 'user_id', 'id');
     }
 
     // Mengambil semua role yang terkait dengan user melalui role_assignments
@@ -50,16 +53,37 @@ class MoodleUser extends Authenticatable
         return $this->with(['roleAssignments', 'roles', 'contexts'])->get();
     }
 
-    public function classrooms()
-    {
+    // public function classrooms()
+    // {
+    //     return $this->belongsToMany(Classroom::class, 'user_classroom', 'user_id', 'classroom_id');
+    // }
+
+    // public function users()
+    // {
+    //     return $this->belongsToMany(User::class, 'users_class', 'class_id', 'user_id');
+    // }
+
+    public function classrooms() {
         return $this->belongsToMany(Classroom::class, 'user_classroom', 'user_id', 'classroom_id');
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class, 'user_id');
+    }
+
+    public function ownClassrooms() {
+        return $this->hasMany(Classroom::class, 'user_id');
+    }
+
+    public function AttendanceInformation() {
+        return $this->hasOne(AttendanceInformation::class, 'user_id');
     }
 }
 
 class RoleAssignment extends Model
 {
     protected $connection = 'moodle';
-    protected $table = 'role_assignments';
+    protected $table = 'mdl_role_assignments';
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -88,7 +112,7 @@ class RoleAssignment extends Model
 class Role extends Model
 {
     protected $connection = 'moodle';
-    protected $table = 'role';
+    protected $table = 'mdl_role';
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -99,7 +123,7 @@ class Role extends Model
 class Context extends Model
 {
     protected $connection = 'moodle';
-    protected $table = 'context';
+    protected $table = 'mdl_context';
     protected $primaryKey = 'id';
 
     protected $fillable = [

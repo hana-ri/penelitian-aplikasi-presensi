@@ -33,7 +33,7 @@ class MoodleLoginController extends Controller
 
             // Cek apakah user ada di tabel mdl_role_assignments
             $roleAssignment = DB::connection('moodle')
-                ->table('role_assignments')
+                ->table('mdl_role_assignments')
                 ->where('userid', $userId)
                 ->first();
 

@@ -2,16 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class FaceRecognitionController extends Controller
 {
-    public function attendance()
+    // public function indexFaceRegister()
+    // {
+    //     return view('attendance.face_recognition');
+    // }
+
+    public function indexFaceRegister()
     {
-        return view('attendance.face_recognition');
+        // dd(auth()->user()->AttendanceInformation->registered_face);
+        return view('attendance.face_register');
     }
+
+    public function createFaceRegister(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'nim' => 'required|string|max:20',
+            'faculty' => 'required|string|max:255',
+            'majoring' => 'required|string|max:255',
+            'registered_face' => 'required|string|regex:/^data:image\/jpeg;base64,/',
+        ], [
+            'required' => ':attribute harus diisi.',
+            'string' => ':attribute harus berupa teks.',
+            'max' => ':attribute tidak boleh lebih dari :max karakter.',
+            'regex' => ':attribute tidak valid. Pastikan formatnya benar.',
+        ], [
+            'name' => 'nama',
+            'nim' => 'NIM',
+            'faculty' => 'fakultas',
+            'majoring' => 'jurusan',
+            'registered_face' => 'gambar wajah',
+        ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
+
+        $validatedData['registered_face'] = str_replace('data:image/jpeg;base64,', '', $validatedData['registered_face']);
+        $validatedData['registered_face'] = base64_decode($validatedData['registered_face']);
+
+        AttendanceInformation::create($validatedData);
+
+        return redirect()->route('user.class.index')->with('success', 'Data berhasil disimpan!');
+    }
+
+    public function showFaceImage()
+    {
+        $attendance = auth()->user()->AttendanceInformation;
+
+        if (!$attendance || !$attendance->registered_face) {
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+
+        $imageData = $attendance->registered_face;
+
+        return response($imageData, 200) ->header('Content-Type', 'image/jpeg');
+    }
+
+    // ===============================================================================================
 
     public function recognize(Request $request)
     {

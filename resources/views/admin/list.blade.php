@@ -11,11 +11,11 @@
 
                         </div>
                         <div class="card-body">
-                            <p>Tanggal: {{ $meeting->date }}</p>
-                            <p>Jam: {{ $meeting->start_time }} - {{ $meeting->end_time }}</p>
+                            <p>Tanggal & Waktu: {{ \Carbon\Carbon::parse($meeting->date)->locale('id')->translatedFormat('l, d F Y') }}, {{ $meeting->start_time }} - {{ $meeting->end_time }}</p>
                         </div>
                         <div class="card-footer">
-                            <a href="{{ route('admin.class.show') }}" class="btn btn-primary">Lihat</a>
+                            {{-- <a href="{{ route('admin.attendance.meeting.list', $meeting->id) }}" class="btn btn-primary">Lihat</a> --}}
+                            <a href="{{ route('admin.attendance.meeting.list', ['meeting' => $meeting->id, 'pertemuan' => $loop->iteration]) }}" class="btn btn-primary">Lihat</a>
                             {{-- <a href="{{ route('admin.class.show') }}" class="btn btn-warning">Tutup pertemuan</a> --}}
                         </div>
                     </div>

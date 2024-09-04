@@ -18,7 +18,7 @@
         <x-page-body>
             <div class="row">
                 @if (session('success'))
-                    <div class="col-12 mb-3">
+                    <div class="col-12">
                         <div class="alert alert-success alert-dismissible bg-white" role="alert">
                             <div class="d-flex">
                                 <div>
@@ -38,18 +38,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title">#{{ $classroom->code }} - Mata Kuliah {{ $classroom->name }}</h3>
-                                <p class="text-secondary">{{ $classroom->description }}</p>
-                                <p class="text-secondary"><a href="{{ route('admin.class.enrollment', $classroom->code) }}"> {{ route('admin.class.enrollment', $classroom->code) }}</a></p>
+                                <p class="text-secondary">Tanggal Mulai: {{ \Carbon\Carbon::parse($classroom->date)->locale('id')->translatedFormat('l, d F Y') }}</p>
+                                <p class="text-secondary">Deskripsi: {{ $classroom->description }}</p>
+                                @if ($classroom->is_enrollment)
+                                <p class="text-secondary"><a href="{{ route('user.class.enrollment', $classroom->code) }}"> {{ route('user.class.enrollment', $classroom->code) }}</a></p>
+                                @endif
                             </div>
                             <div class="card-footer text-end">
                                 <div class="d-flex">
                                     <label class="row">
-                                        <span class="col">Mode pendaftaran</span>
-                                        <span class="col-auto">
-                                            <label class="form-check form-check-single form-switch">
-                                                <input class="form-check-input" type="checkbox" checked>
-                                            </label>
-                                        </span>
+                                        <span class="col">Mode pendaftaran: {!! $classroom->is_enrollment ? '<span class="badge bg-green text-green-fg">Aktif</span>' : '<span class="badge bg-orange text-orange-fg">Nonaktif</span>' !!}</span>
                                     </label>
                                     <div class="ms-auto">
                                         <a href="{{ route('admin.attendance.list', $classroom->code) }}"

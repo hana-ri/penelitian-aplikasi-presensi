@@ -10,7 +10,7 @@ class Classroom extends Model
 {
     protected
     $guarded = ['id'],
-    $with = ['meetings'];
+    $with = ['meetings', 'ownUser'];
 
     public function getRouteKeyName(): string
     {
@@ -27,12 +27,16 @@ class Classroom extends Model
         return Carbon::createFromFormat('H:i:s', $value)->format('H:i');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(MoodleUser::class, 'user_classroom', 'classroom_id', 'user_id');
+    }
+
     public function meetings() : HasMany {
         return $this->hasMany(Meeting::class);
     }
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_classroom', 'classroom_id', 'user_id');
+    public function ownUser() {
+        return $this->belongsTo(MoodleUser::class, 'user_id');
     }
 }
