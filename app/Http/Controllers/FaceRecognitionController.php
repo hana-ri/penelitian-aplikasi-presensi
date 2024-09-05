@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\SteganoEncode;
+use App\Traits\SteganoDecode;
 
 class FaceRecognitionController extends Controller
 {
-    use SteganoEncode;
+    use SteganoEncode, SteganoDecode;
     // public function indexFaceRegister()
     // {
     //     return view('attendance.face_recognition');
@@ -62,6 +63,8 @@ class FaceRecognitionController extends Controller
         }
 
         $imageData = $attendance->registered_face;
+        @dd($this->extractMessageFromImage($imageData));
+        
 
         return response($imageData, 200) ->header('Content-Type', 'image/jpeg');
     }

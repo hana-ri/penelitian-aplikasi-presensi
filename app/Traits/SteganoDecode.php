@@ -4,11 +4,8 @@ namespace App\Traits;
 
 trait SteganoDecode
 {
-    public function extractMessageFromImage($imageBase64)
+    public function extractMessageFromImage($imageData)
     {
-        // Decode base64 image
-        $imageData = base64_decode($imageBase64);
-
         // Create an image resource from the string
         $img = imagecreatefromstring($imageData);
         if (!$img) {
@@ -65,15 +62,5 @@ trait SteganoDecode
 
         // Decode base64 message
         return base64_decode($final);
-    }
-
-    private function _imagecolorat($img, $x, $y)
-    {
-        $rgb = imagecolorat($img, $x, $y);
-        return [
-            'r' => ($rgb >> 16) & 0xFF,
-            'g' => ($rgb >> 8) & 0xFF,
-            'b' => $rgb & 0xFF,
-        ];
     }
 }
