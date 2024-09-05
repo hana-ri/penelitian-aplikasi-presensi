@@ -6,9 +6,11 @@ use App\Models\AttendanceInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\SteganoEncode;
 
 class FaceRecognitionController extends Controller
 {
+    use SteganoEncode;
     // public function indexFaceRegister()
     // {
     //     return view('attendance.face_recognition');
@@ -42,9 +44,9 @@ class FaceRecognitionController extends Controller
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
-
         $validatedData['registered_face'] = str_replace('data:image/jpeg;base64,', '', $validatedData['registered_face']);
-        $validatedData['registered_face'] = base64_decode($validatedData['registered_face']);
+        $hiddenImage = $this->hideTextInImage($validatedData['name'], $validatedData['registered_face'] );
+        $validatedData['registered_face'] = base64_decode($hiddenImage);
 
         AttendanceInformation::create($validatedData);
 
