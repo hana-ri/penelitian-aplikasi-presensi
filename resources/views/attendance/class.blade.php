@@ -4,20 +4,31 @@
         <x-page-header title="Daftar kelas" />
         <x-page-body>
             @if (session('success'))
-                    <div class="col-12">
-                        <div class="alert alert-success alert-dismissible bg-white" role="alert">
-                            <div class="d-flex">
-                                <div>
-                                    <i class="ti ti-check fs-2"></i>
-                                </div>
-                                <div>
-                                    {{ session('success') }}
-                                </div>
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible bg-white" role="alert">
+                        <div class="d-flex">
+                            <div>
+                                <i class="ti ti-check fs-2"></i>
                             </div>
-                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                            <div>
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                    </div>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
                         </div>
                     </div>
-                @endif
+                </div>
+            @endif
             @foreach ($classrooms as $classroom)
                 <div class="card mb-3">
                     <div class="card-body">
@@ -26,7 +37,8 @@
                         <p class="text-secondary">Deskripsi: {{ $classroom->description }}</p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('user.class.attendance.index', $classroom->code) }}" class="btn btn-primary">Buka</a>
+                        <a href="{{ route('user.class.attendance.index', $classroom->code) }}"
+                            class="btn btn-primary">Buka</a>
                     </div>
                 </div>
             @endforeach

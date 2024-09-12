@@ -21,9 +21,9 @@
                                     placeholder="Readonly..." value="Belum presensi" readonly>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Validasi</label>
+                                <label class="form-label">Status Anda</label>
                                 <input type="text" class="form-control" name="last-status" placeholder="Readonly..."
-                                    value="Tidak valid" readonly>
+                                    value="-" readonly>
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                 const dataUrl = canvas.toDataURL('image/jpeg');
                 const base64Image = dataUrl.split(',')[1];
 
-                const response = await fetch('/recognize', {
+                const response = await fetch('{{ route('user.attendance.recognize', $meeting->id) }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -73,11 +73,12 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    // alert(`Wajah Dikenali dengan Nama: ${result.name}`);
-                    $('input[name="status-presensi"]').val('Terverifikasi');
+                    if (result.status_presensi == 'Hadir') {
+                        location.reload();
+                    }
+                    $('input[name="status-presensi"]').val(result.status_presensi);
                     $('input[name="last-status"]').val('Memperhatikan');
                 } else {
-                    // alert('Wajah Tidak Dikenali');
                     $('input[name="last-status"]').val('Tidak Memperhatikan');
                 }
             }

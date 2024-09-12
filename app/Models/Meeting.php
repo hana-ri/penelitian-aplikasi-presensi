@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 class Meeting extends Model
 {
     protected $guarded = ['id'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
 
     public function getStartTimeAttribute($value)
     {

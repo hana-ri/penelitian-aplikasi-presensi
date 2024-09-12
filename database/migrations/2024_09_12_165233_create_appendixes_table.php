@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meetings', function (Blueprint $table) {
+        Schema::create('appendixes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('classroom_id');
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->foreignId('attendance_id');
+            $table->string('statement');
+            $table->longText('description');
+            $table->string('attachment');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meetings');
+        Schema::dropIfExists('appendixes');
     }
 };

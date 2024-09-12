@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('meeting_id');
             $table->foreignId('user_id');
             $table->dateTime('date_time');
-            $table->enum('status', ['Hadir', 'Absen', 'Sakit', 'Terlambat', 'Izin'])->nullable();
+            $table->enum('status', ['Hadir', 'Sedang presensi', 'Permintaan pengajuan', 'Absen', 'Sakit', 'Izin'])->nullable();
+            $table->integer('count');
             $table->timestamps();
         });
     }

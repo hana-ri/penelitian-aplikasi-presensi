@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('nim')->unique();
             $table->string('faculty');
             $table->string('majoring');
-            $table->binary('registered_face');
+            // $table->binary('registered_face');
+            $table->longText('registered_face')->charset('binary'); // LONGBLOB
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('mdl_user')->onDelete('cascade');

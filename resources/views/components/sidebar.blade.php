@@ -81,15 +81,17 @@
                             <span class="nav-link-title"> Presensi</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->route()->named('user.face.register') ? 'active' : '' }}">
-                        <a class="nav-link {{ request()->route()->named('user.face.register') ? 'active' : '' }}"
-                            href="{{ route('user.face.register') }}">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <i class="ti ti-user fs-2"></i>
-                            </span>
-                            <span class="nav-link-title">Register wajah</span>
-                        </a>
-                    </li>
+                    @if (auth()->user()->AttendanceInformation === null)
+                        <li class="nav-item {{ request()->route()->named('user.face.register') ? 'active' : '' }}">
+                            <a class="nav-link {{ request()->route()->named('user.face.register') ? 'active' : '' }}"
+                                href="{{ route('user.face.register') }}">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-user fs-2"></i>
+                                </span>
+                                <span class="nav-link-title">Register wajah</span>
+                            </a>
+                        </li>
+                    @endif
                 @endif
             </ul>
         </div>

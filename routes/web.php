@@ -45,13 +45,13 @@ Route::middleware(['auth:moodle'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/attendance', function () {
-        return view('attendance.face_recognition');
-    })->name('attendance');
+    // Route::get('/attendance', function () {
+    //     return view('attendance.face_recognition');
+    // })->name('attendance');
 
-    Route::get('/absent', function () {
-        return view('attendance.absent');
-    })->name('absent');
+    // Route::get('/absent', function () {
+    //     return view('attendance.absent');
+    // })->name('absent');
 
     // Route::get('/face/register', function () {
     //     return view('attendance.face_register');
@@ -67,12 +67,16 @@ Route::prefix('user')
             Route::get('classroom', 'indexClassroom')->name('class.index');
             Route::get('classroom/list/{classroom:code}', 'indexMeeting')->name('class.attendance.index');
             Route::get('class/enrollment/{classroom:code}', 'enrollment')->name('class.enrollment');
+            Route::get('absent/{meeting:id}', 'absentView')->name('absent.view');
+            Route::post('absent/{meeting:id}', 'absentProcess')->name('absent.process');
         });
 
         Route::controller(FaceRecognitionController::class)->group(function () {
             Route::get('face/register', 'indexFaceRegister')->name('face.register');
             Route::post('face/register', 'createFaceRegister')->name('create.face.register');
             Route::get('face/show', 'showFaceImage')->name('face.show');
+            route::get('attendance/{meeting:id}', 'indexAttendance')->name('attendance.recognition');
+            route::post('attendance/{meeting:id}', 'recognize')->name('attendance.recognize');
         });
     });
 });
@@ -99,4 +103,4 @@ Route::prefix('admin')
     });
 });
 
-Route::post('/recognize', [FaceRecognitionController::class, 'recognize']);
+// Route::post('/recognize', [FaceRecognitionController::class, 'recognize']);

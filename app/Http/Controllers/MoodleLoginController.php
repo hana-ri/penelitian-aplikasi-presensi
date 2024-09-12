@@ -40,7 +40,7 @@ class MoodleLoginController extends Controller
             if ($roleAssignment) {
                 return redirect()->intended('/dashboard');
             } else {
-                return redirect()->intended('/attendance');
+                return redirect()->intended('/dashboard');
             }
         }
 

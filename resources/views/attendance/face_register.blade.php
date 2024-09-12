@@ -3,6 +3,45 @@
     <div class="page-wrapper">
         <x-page-header title="Face register" />
         <x-page-body>
+            @if (session('success'))
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($errors->any())
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <form action="{{ route('user.create.face.register') }}" method="POST" class="card">
                 @csrf
                 @method('POST')
@@ -10,25 +49,29 @@
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Nama</label>
                         <div class="col">
-                            <input type="text" name="name" class="form-control" placeholder="Jhon doe">
+                            <input type="text" name="name" class="form-control"
+                                value="{{ old('name', auth()->user()->full_name ?? '') }}" placeholder="Jhon doe">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">NIM</label>
                         <div class="col">
-                            <input type="text" name="nim" class="form-control" placeholder="20012345">
+                            <input type="text" name="nim" value="{{ old('nim') }}" class="form-control"
+                                placeholder="20012345">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Fakultas/Kampus daerah</label>
                         <div class="col">
-                            <input type="text" name="faculty" class="form-control" placeholder="Kampus Daerah Cibiru">
+                            <input type="text" name="faculty" value="{{ old('faculty') }}" class="form-control"
+                                placeholder="Kampus UPI di Cibiru">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Program studi</label>
                         <div class="col">
-                            <input type="text" name="majoring" class="form-control" placeholder="Teknik Komputer">
+                            <input type="text" name="majoring" value="{{ old('majoring') }}" class="form-control"
+                                placeholder="Teknik Komputer">
                         </div>
                     </div>
                     <div class="mb-3 row">

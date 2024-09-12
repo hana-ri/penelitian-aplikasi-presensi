@@ -3,25 +3,27 @@
     <div class="page-wrapper">
         <x-page-header title="Ajukan absen" />
         <x-page-body>
-            <form action="" method="post" class="card">
+            <form action="{{ route('user.absent.process', $meeting->id) }}" method="post" class="card" enctype="multipart/form-data">
+                @csrf
+                @method('POST')
                 <div class="card-body">
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Keterangan</label>
                         <div class="col">
-                            <input type="email" class="form-control" aria-describedby="emailHelp"
-                                placeholder="Sakit, Keperluan pribadi, dan sejenisnya.">
+                            <input type="text" class="form-control" aria-describedby="emailHelp"
+                                placeholder="Sakit, Keperluan pribadi, dan sejenisnya." name="statement">
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Deskripsi</label>
                         <div class="col">
-                            <textarea class="form-control" rows="5">Big belly rude boy, million dollar hustler. Unemployed.</textarea>
+                            <textarea class="form-control" name="description" rows="5">Big belly rude boy, million dollar hustler. Unemployed.</textarea>
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label class="col-3 col-form-label required">Lampiran</label>
                         <div class="col">
-                            <input type="file" class="form-control">
+                            <input type="file" name="attachment" class="form-control">
                         </div>
                     </div>
                 </div>

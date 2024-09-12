@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceInformation;
 use App\Models\Classroom;
+use App\Models\Meeting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UserClassroomController extends Controller
@@ -10,6 +13,12 @@ class UserClassroomController extends Controller
 
     public function indexClassroom() {
         $userClassrooms = auth()->user()->classrooms;
+
+        $existingRegistration = AttendanceInformation::where('user_id', auth()->user()->id)->first();
+
+        if (!$existingRegistration) {
+            return redirect()->route('user.create.face.register')->with('error', 'Daftarkan wajah anda terlebih dahulu.');
+        }
 
         return view('attendance.class', [
             'classrooms' => $userClassrooms,
@@ -46,5 +55,42 @@ class UserClassroomController extends Controller
                 ->with('error', 'Terjadi kesalahan saat pendaftaran kelas. Silakan hubungi administrator.' . ' ' . $e->getMessage())
                 ->withInput();
         }
+    }
+
+    public function absentView(Meeting $meeting) {
+        $attendance = $meeting->attendances()->where('user_id', auth()->user()->id);
+        // dd($attendance->first()->status);
+        if ($attendance->exists() && $attendance->first()->count >= 5) {
+            return redirect()->back()->with('success', 'Status kamu ' . $attendance->first()->status . '.');
+        }
+
+        return view('attendance.absent',[
+            'meeting' => $meeting,
+        ]);
+    }
+
+    public function absentProcess(Meeting $meeting, Request $request) {
+        $user = auth()->user();
+        $validatedData = $request->validate([
+            'statement' => 'required',
+            'description' => 'required|string|max:500',
+            'attachment' => 'nullable|mimes:pdf|max:2048',
+        ]);
+
+        $user = auth()->user();
+            $attendance = $meeting->attendances()
+                ->where('user_id', $user->id);
+
+        if (!$attendance->exists()) {
+            $attendance = $meeting->attendances()->create([
+                'user_id' => $user->id,
+                'date_time' => now(),
+                'status' => 'Permintaan pengajuan',
+                'count' => 5
+            ]);
+        }
+
+        $attendance->appendices()->create($validatedData);
+        return redirect()->route('user.class.attendance.index')->with('success', 'Status kamu ' . $attendance->first()->status . '.');
     }
 }
