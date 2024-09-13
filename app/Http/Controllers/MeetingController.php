@@ -144,14 +144,21 @@ class MeetingController extends Controller
         $user_id = $request->query('user_id');
         $action = $request->query('action');
 
-        $user = MoodleUser::find($user_id);
+        $user = MoodleUser::find($user_id)->AttendanceInformation;
+        // $textToHide = '<p>Nama: '. $validatedData['name'] .'</p> <p>NIM: '. $validatedData['nim'] .' </p> <p>Fakultas: '. $validatedData['faculty'] .'</p> <p>Program studi: '. $validatedData['majoring'] .'</p>';
+        // dd($user->AttendanceInformation->registered_face);
+
 
         $attendance = \App\Models\Attendance::where('meeting_id', $meeting_id)
                         ->where('user_id', $user_id)
                         ->first();
 
+        // $user = \App\Models\MoodleUser::find($user_id);
+        // dd($user->AttendanceInformation);
+
         // dd($moodleUser->AttendanceInformation);
-        $lsbMessage = $this->extractMessageFromImage($attendance->attendance_attachment);
+        $lsbMessage = $this->extractMessageFromImage($user->registered_face);
+        // dd($lsbMessage);
 
         return view('admin.attendance_attachment', [
             'meeting_id' => $meeting_id,

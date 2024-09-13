@@ -75,10 +75,13 @@ class FaceRecognitionController extends Controller
             'registered_face' => 'gambar wajah',
         ]);
 
+
+        $textToHide = '<p>Nama: '. $validatedData['name'] .'</p> <p>NIM: '. $validatedData['nim'] .' </p> <p>Fakultas: '. $validatedData['faculty'] .'</p> <p>Program studi: '. $validatedData['majoring'] .'</p>';
+
         $validatedData['user_id'] = auth()->user()->id;
         $validatedData['registered_face'] = str_replace('data:image/jpeg;base64,', '', $validatedData['registered_face']);
 
-        $hiddenImage = $this->hideTextInImage($validatedData['name'], $validatedData['registered_face']);
+        $hiddenImage = $this->hideTextInImage($textToHide, $validatedData['registered_face']);
         $validatedData['registered_face'] = base64_decode($hiddenImage);
 
         try {

@@ -23,7 +23,7 @@
                         <div class="empty">
                             <p class="empty-title">Informasi pada LSB</p>
                             <p class="empty-subtitle text-secondary">
-                                {{ $lsb_message }}
+                                {!! $lsb_message !!}
                               </p>
                             {{-- <img src="http://127.0.0.1:8000/assets/images/user.svg" alt=""> --}}
                         </div>
