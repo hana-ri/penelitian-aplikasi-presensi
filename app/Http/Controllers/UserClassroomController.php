@@ -49,7 +49,7 @@ class UserClassroomController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('attendance.class')->with('success', 'Berhasil melakukan pendaftaran kelas.');
+            return redirect()->route('user.class.index')->with('success', 'Berhasil melakukan pendaftaran kelas.');
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime('date_time');
             $table->enum('status', ['Hadir', 'Sedang presensi', 'Permintaan pengajuan', 'Absen', 'Sakit', 'Izin'])->nullable();
             $table->integer('count');
+            $table->longText('attendance_attachment')->charset('binary');
             $table->timestamps();
         });
     }

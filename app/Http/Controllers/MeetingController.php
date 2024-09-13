@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 use \App\Models\Classroom;
 use App\Models\Meeting;
 use App\Models\MoodleUser;
+use App\Traits\SteganoDecode;
+use App\Traits\SteganoEncode;
 
 class MeetingController extends Controller
 {
+    use SteganoEncode, SteganoDecode;
+
     public function indexClassroom(Classroom $classroom)
     {
         return view('admin.list', [
@@ -66,6 +70,7 @@ class MeetingController extends Controller
                             if ($attendance->status == 'Absen') {
                                 return '-';
                             }
+                            return '<a href="'. route('admin.attandace.attachment', ['meeting_id' => $meeting->id, 'user_id' => $user->id]) .'">Lampiran Kehadiran</a>';
                             return 'Lampiran Kehadiran';
                         }
                         return '<a href="'. route('admin.absent.attachment', $appendices->first()->id) .'">Lampiran</a>';
@@ -131,6 +136,28 @@ class MeetingController extends Controller
     public function absentAttachment(Appendix $appendix) {
         return view('admin.absent', [
             'appendix' => $appendix,
+        ]);
+    }
+
+    public function attandanceAttachment(Appendix $appendix, Request $request) {
+        $meeting_id = $request->query('meeting_id');
+        $user_id = $request->query('user_id');
+        $action = $request->query('action');
+
+        $user = MoodleUser::find($user_id);
+
+        $attendance = \App\Models\Attendance::where('meeting_id', $meeting_id)
+                        ->where('user_id', $user_id)
+                        ->first();
+
+        // dd($moodleUser->AttendanceInformation);
+        $lsbMessage = $this->extractMessageFromImage($attendance->attendance_attachment);
+
+        return view('admin.attendance_attachment', [
+            'meeting_id' => $meeting_id,
+            'user_id' => $user_id,
+            'user' => $user,
+            'lsb_message' => $lsbMessage,
         ]);
     }
 }

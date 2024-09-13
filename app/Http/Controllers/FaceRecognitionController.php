@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
 use App\Models\AttendanceInformation;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use App\Traits\SteganoEncode;
 use App\Traits\SteganoDecode;
 use Illuminate\Support\Facades\Auth;
@@ -28,16 +26,26 @@ class FaceRecognitionController extends Controller
         return view('attendance.face_register');
     }
 
-    public function indexAttendance(Meeting $meeting) {
-        $attendance = $meeting->attendances()->where('user_id', auth()->user()->id);
+    public function indexAttendance(Meeting $meeting)
+    {
+        // dd($meeting->date, now()->toDateString(), ($meeting->date == now()->toDateString()), now()->toTimeString(), $meeting->start_time, (now()->toTimeString() >= $meeting->start_time), now()->toTimeString(), $meeting->end_time, (now()->toTimeString() <= $meeting->end_time));
+        // if (!($meeting->date == now()->toDateString()) && now()->toTimeString() >= $meeting->start_time && now()->toTimeString() <= $meeting->end_time) {
+        //     return redirect()->back()->with('success', 'Belum dibuka');
+        // }
 
-        if ($attendance->exists() && $attendance->first()->count >= 5) {
-            return redirect()->back()->with('success', 'Status kamu ' . $attendance->first()->status . '.');
+        if ($meeting->date == now()->toDateString() && now()->toTimeString() >= $meeting->start_time && now()->toTimeString() <= $meeting->end_time) {
+            $attendance = $meeting->attendances()->where('user_id', auth()->user()->id);
+
+            if ($attendance->exists() && $attendance->first()->count >= 5) {
+                return redirect()->back()->with('success', 'Status kamu ' . $attendance->first()->status . '.');
+            }
+
+            return view('attendance.face_recognition', [
+                'meeting' => $meeting
+            ]);
         }
 
-        return view('attendance.face_recognition', [
-            'meeting' => $meeting
-        ]);
+        return redirect()->back()->with('error', 'Pertemuan belum dibuka');
     }
 
     public function createFaceRegister(Request $request)
@@ -83,25 +91,50 @@ class FaceRecognitionController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
-            ->with('error', 'Terjadi kesalahan. Silakan hubungi administrator.' . ' ' . $e->getMessage())
-            ->withInput();
+                ->with('error', 'Terjadi kesalahan. Silakan hubungi administrator.' . ' ' . $e->getMessage())
+                ->withInput();
         }
-
     }
 
-    public function showFaceImage()
+    public function showFaceImage(Request $request)
     {
-        $attendance = auth()->user()->AttendanceInformation;
+        // dd($request->missing('user_id'));
+        if ($request->has('user_id') && $request->missing('meeting_id')) {
+            $user_id = $request->query('user_id');
 
-        if (!$attendance || !$attendance->registered_face) {
-            return response()->json(['error' => 'Image not found'], 404);
+            $user = \App\Models\MoodleUser::find($user_id);
+
+            $attendance = $user->AttendanceInformation;
+
+            if (!$attendance || !$attendance->registered_face) {
+                return response()->json(['error' => 'Image not found'], 404);
+            }
+
+            $imageData = $attendance->registered_face;
+            // @dd($this->extractMessageFromImage($imageData));
+
+            return response($imageData, 200)->header('Content-Type', 'image/jpeg');
         }
 
-        $imageData = $attendance->registered_face;
-        // @dd($this->extractMessageFromImage($imageData));
+        if ($request->has('user_id') && $request->has('meeting_id')) {
+            $user_id = $request->query('user_id');
+            $meeting_id = $request->query('meeting_id');
+
+            $attendance = \App\Models\Attendance::where('meeting_id', $meeting_id)
+                        ->where('user_id', $user_id)
+                        ->first();
 
 
-        return response($imageData, 200)->header('Content-Type', 'image/jpeg');
+            // dd($attendance->attendance_attachment);
+
+            if (!$attendance || !$attendance->attendance_attachment) {
+                return response()->json(['error' => 'Image not found'], 404);
+            }
+
+            $imageData = $attendance->attendance_attachment;
+
+            return response($imageData, 200)->header('Content-Type', 'image/jpeg');
+        }
     }
 
     // ===============================================================================================
@@ -132,6 +165,7 @@ class FaceRecognitionController extends Controller
                     'user_id' => $user->id,
                     'date_time' => now(),
                     'status' => 'Sedang presensi',
+                    'attendance_attachment' => $registered_image,
                     'count' => 1
                 ]);
                 $verifyResponse['status_presensi'] = 'Sedang presensi';

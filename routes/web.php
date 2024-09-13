@@ -61,9 +61,9 @@ Route::middleware(['auth:moodle'])->group(function () {
                                 $data->push([
                                     'classname' => $classroom->name,
                                     'fullname' => $user->full_name,
-                                    'meeting' => 'Pertemuan ' . $meeting->id,
+                                    'meeting' => Carbon::parse($meeting->date)->locale('id')->translatedFormat('l, d F Y'),
                                     'attendance_status' => $attendance ? $attendance->status : 'Belum tersedia',
-                                    'date_time' => $attendance ? Carbon::parse($attendance->date_time)->format('H:i d-F-Y') : 'Belum tersedia',
+                                    'date_time' => $attendance ? Carbon::parse($attendance->date_time)->locale('id')->translatedFormat('H:i l, d F Y') : 'Belum tersedia',
                                 ]);
                             }
                         }
@@ -84,9 +84,9 @@ Route::middleware(['auth:moodle'])->group(function () {
                         if ($attendance) {
                             $data->push([
                                 'classname' => $classroom->name,
-                                'meeting' => 'Pertemuan ' . $meeting->id,
+                                'meeting' => Carbon::parse($meeting->date)->locale('id')->translatedFormat('l, d F Y'),
                                 'attendance_status' => $attendance ? $attendance->status : 'Belum tersedia',
-                                'date_time' => $attendance ? Carbon::parse($attendance->date_time)->format('H:i d-F-Y') : 'Belum tersedia',
+                                'date_time' => $attendance ? Carbon::parse($attendance->date_time)->locale('id')->translatedFormat('H:i l, d F Y') : 'Belum tersedia',
                             ]);
                         }
                     }
@@ -107,9 +107,9 @@ Route::middleware(['auth:moodle'])->group(function () {
     //     return view('attendance.face_recognition');
     // })->name('attendance');
 
-    Route::get('/admin/attendance/attachment', function () {
-        return view('admin.attendance_attachment');
-    })->name('admin.absent');
+    // Route::get('/admin/attendance/attachment', function () {
+    //     return view('admin.attendance_attachment');
+    // })->name('admin.absent');
 
     // Route::get('/face/register', function () {
     //     return view('attendance.face_register');
@@ -159,6 +159,7 @@ Route::prefix('admin')
                 Route::get('attendance/meeting/list/{meeting:id}', 'indexMeeting')->name('attendance.meeting.list');
                 Route::get('attendance/update', 'updateAttendance')->name('attendance.update');
                 Route::get('absent/attachment/{appendix:id}', 'absentAttachment')->name('absent.attachment');
+                Route::get('attendance/attachment/', 'attandanceAttachment')->name('attandace.attachment');
             });
         });
     });

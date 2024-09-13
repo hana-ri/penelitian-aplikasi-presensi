@@ -15,7 +15,7 @@
                                         <th>Pertemuan</th>
                                         <th>Nama</th>
                                         <th>Status</th>
-                                        <th>Tanggal & Waktu</th>
+                                        <th>Waktu & Tanggal Tercatat</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -28,7 +28,7 @@
                                     <th>Kelas</th>
                                     <th>Pertemuan</th>
                                     <th>Status</th>
-                                    <th>Tanggal & Waktu</th>
+                                    <th>Waktu & Tanggal Tercatat</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
