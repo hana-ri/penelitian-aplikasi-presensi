@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('attendance_id');
             $table->string('statement');
             $table->longText('description');
-            $table->string('attachment');
+            $table->string('attachment')->nullable()->default(null);
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appendix;
 use App\Models\AttendanceInformation;
 use App\Models\Classroom;
 use App\Models\Meeting;
@@ -77,6 +78,13 @@ class UserClassroomController extends Controller
             'attachment' => 'nullable|mimes:pdf|max:2048',
         ]);
 
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $fileName = \Illuminate\Support\Str::uuid() . '.' . $file->getClientOriginalExtension(); // Buat nama file unik
+            $filePath = $file->storeAs('attachments', $fileName, 'public'); // Simpan dengan nama file unik
+            $validatedData['attachment'] = $filePath; // Tambahkan path file ke data yang akan disimpan
+        }
+
         $user = auth()->user();
             $attendance = $meeting->attendances()
                 ->where('user_id', $user->id);
@@ -91,6 +99,6 @@ class UserClassroomController extends Controller
         }
 
         $attendance->appendices()->create($validatedData);
-        return redirect()->route('user.class.attendance.index')->with('success', 'Status kamu ' . $attendance->first()->status . '.');
+        return redirect()->route('user.class.index')->with('success', 'Pangajuan izin presensi sedang dilakukan silakan konfirmasi ke pengampu kelas');
     }
 }

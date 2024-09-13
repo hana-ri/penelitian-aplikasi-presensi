@@ -16,7 +16,8 @@
                                             <th>No</th>
                                             <th>Nama</th>
                                             <th>Status presensi</th>
-                                            <th>Action</th>
+                                            <th>Lampiran</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -52,6 +53,10 @@
                     {
                         data: 'attendance_status',
                         name: 'attendance_status'
+                    },
+                    {
+                        data: 'lampiran',
+                        name: 'lampiran'
                     },
                     {
                         data: 'action',
